@@ -1,0 +1,8 @@
+{
+  "schemaFile": "https://7516-45-12-24-206.ngrok-free.app/swagger/v1/swagger.json",
+  "apiFile": "./src/core/api/emptyApi.ts",
+  "apiImport": "emptySplitApi",
+  "outputFile": "./src/core/api/baseApi.ts",
+  "exportName": "baseApi",
+  "hooks": true
+}

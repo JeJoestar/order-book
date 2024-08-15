@@ -6,21 +6,31 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "generate-api": "npx @rtk-query/codegen-openapi openapi-config.json"
   },
   "dependencies": {
+    "@chakra-ui/react": "^2.8.2",
+    "@emotion/react": "^11.13.0",
+    "@emotion/styled": "^11.13.0",
+    "@reduxjs/toolkit": "^2.2.7",
+    "framer-motion": "^11.3.27",
+    "next": "14.2.5",
+    "next-redux-wrapper": "^8.1.0",
+    "query-string": "^9.1.0",
     "react": "^18",
     "react-dom": "^18",
-    "next": "14.2.5"
+    "recharts": "^2.12.7",
+    "sonner": "^1.5.0"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@rtk-query/codegen-openapi": "^1.0.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.5",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
-    "eslint": "^8",
-    "eslint-config-next": "14.2.5"
+    "typescript": "^5"
   }
 }
