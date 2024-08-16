@@ -1,3 +1,4 @@
+/* stylelint-disable scss/at-rule-no-unknown */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -27,7 +28,26 @@ body {
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  .absolute-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .custom-scrollbar {
+    scrollbar-width: thin;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-divider rounded-[50px];
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    @apply bg-transparent w-1;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-primary-outlineBorder rounded-[50px];
   }
 }

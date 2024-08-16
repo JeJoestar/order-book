@@ -11,19 +11,28 @@ import {
   ResponsiveContainer,
   Cell,
 } from "recharts";
+
 interface Props {
   data: OrderBookDto;
 }
+
+export enum OrderType {
+  Ask = "ASK",
+  Bid = "BID",
+}
+
+const BID_GREEN_COLOR = "#82ca9d";
+const ASK_RED_COLOR = "#de0a26";
 
 const DepthChart: React.FC<Props> = ({ data }) => {
   const chartData = [
     ...(data.bids?.map((b) => ({
       ...b,
-      type: "BID",
+      type: OrderType.Bid,
     })) || []),
     ...(data.asks?.map((a) => ({
       ...a,
-      type: "ASK",
+      type: OrderType.Ask,
     })) || []),
   ];
 
@@ -38,8 +47,9 @@ const DepthChart: React.FC<Props> = ({ data }) => {
         <Bar dataKey="amount">
           {chartData.map((entry, index) => (
             <Cell
-              cursor="pointer"
-              fill={entry.type === "BID" ? "#82ca9d" : "#de0a26"}
+              fill={
+                entry.type === OrderType.Bid ? BID_GREEN_COLOR : ASK_RED_COLOR
+              }
               key={`cell-${index}`}
             />
           ))}
