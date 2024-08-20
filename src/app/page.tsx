@@ -1,17 +1,24 @@
 "use client";
 
+import { SignalRContext } from "@/boot/signalR";
 import BuyInput from "@/components/buy-input";
 import DepthChart from "@/components/depth-chart";
 import OrderBookTable from "@/components/order-book-table";
-import { useGetOrdersQuery } from "@/core/api/baseApi";
+import { OrderBookDto, useGetOrdersQuery } from "@/core/api/baseApi";
 import { CircularProgress } from "@chakra-ui/react";
+import { useState } from "react";
 
 const Home: React.FC = () => {
-  const { currentData } = useGetOrdersQuery(undefined, {
-    pollingInterval: 500,
-  });
+  const [data, setData] = useState<OrderBookDto>();
+  SignalRContext.useSignalREffect(
+    "SendTradeUpdate",
+    (orderBook: OrderBookDto) => {
+      setData(orderBook);
+    },
+    []
+  );
 
-  if (!currentData) {
+  if (!data) {
     return (
       <div className="min-h-[100vh] relative">
         <CircularProgress isIndeterminate className="!absolute-center" />
@@ -21,9 +28,9 @@ const Home: React.FC = () => {
 
   return (
     <div>
-      <BuyInput rate={currentData.averagePrice as number} />
-      <DepthChart data={currentData} />
-      <OrderBookTable data={currentData} />
+      <BuyInput data={data} />
+      <DepthChart data={data} />
+      <OrderBookTable data={data} />
     </div>
   );
 };
