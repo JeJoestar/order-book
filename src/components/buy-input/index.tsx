@@ -1,49 +1,76 @@
-import { Input, InputGroup, InputLeftAddon } from "@chakra-ui/react";
-import { useEffect, useRef, useState } from "react";
+import { OrderBookDto } from "@/core/api/baseApi";
+import debounce from "@/core/utils/debounce";
+import {
+  Input,
+  InputGroup,
+  InputLeftAddon,
+  Stat,
+  StatLabel,
+  StatNumber,
+} from "@chakra-ui/react";
+import { useCallback, useEffect, useState } from "react";
 
 interface Props {
-  rate: number;
+  data: OrderBookDto;
 }
 
-const BuyInput: React.FC<Props> = ({ rate }) => {
-  const [focusedInput, setFocusedInput] = useState<"price" | "amount">();
+const BuyInput: React.FC<Props> = ({ data }) => {
   const [amount, setAmount] = useState<number>();
   const [price, setPrice] = useState<number>();
 
+  const handleAmountInput = useCallback(
+    debounce((amount: number) => getPrice(amount), 300),
+    []
+  );
+
+  const getPrice = (amount: number | undefined) => {
+    if (amount === undefined || !data.asks?.length) return undefined;
+
+    let priceResult = 0;
+    let amountSum = 0;
+    for (let index = 0; index < data.asks.length; index++) {
+      const currentAsk = data.asks[index];
+      amountSum += currentAsk.amount;
+
+      // calculate redundant part of price and remove it
+      if (amountSum > amount) {
+        const dif = amountSum - amount;
+        const difPercentage = (dif * 100) / currentAsk.amount;
+        const difPrice = (difPercentage * currentAsk.price) / 100;
+
+        priceResult += currentAsk.price - difPrice;
+        break;
+      }
+
+      priceResult += data.asks[index].price;
+    }
+
+    setPrice(priceResult);
+  };
+
   useEffect(() => {
-    if (amount === undefined || focusedInput !== "amount") return;
-
-    setPrice(rate * amount);
-  }, [amount, focusedInput, rate]);
+    handleAmountInput(amount);
+  }, [amount]);
 
   useEffect(() => {
-    if (price === undefined || focusedInput !== "price") return;
-
-    setAmount(price / rate);
-  }, [price, focusedInput, rate]);
+    getPrice(amount);
+  }, [data]);
 
   return (
     <div>
       <InputGroup>
         <InputLeftAddon>Amount</InputLeftAddon>
         <Input
-          onFocus={() => setFocusedInput("amount")}
           type="number"
           placeholder="BTC"
           value={amount}
-          onChange={(e) => setAmount(parseFloat(e.target.value))}
+          onChange={(e) => setAmount(parseInt(e.target.value))}
         />
       </InputGroup>
-      <InputGroup>
-        <InputLeftAddon>Price</InputLeftAddon>
-        <Input
-          onFocus={() => setFocusedInput("price")}
-          type="number"
-          placeholder="EUR"
-          value={price}
-          onChange={(e) => setPrice(parseFloat(e.target.value))}
-        />
-      </InputGroup>
+      <Stat className="p-4">
+        <StatLabel>Price</StatLabel>
+        <StatNumber>{price || 0}</StatNumber>
+      </Stat>
     </div>
   );
 };
