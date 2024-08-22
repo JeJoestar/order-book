@@ -1,7 +1,6 @@
 "use client";
 
-import HubProvider from "@/boot/signalr";
-import SignalRProvider from "@/boot/signalr-default";
+import SignalRProvider from "@/boot/signalr";
 import { store } from "@/core/store";
 import { ChakraProvider } from "@chakra-ui/react";
 import { PropsWithChildren } from "react";

@@ -27,27 +27,27 @@ export type GetOrdersApiArg = {
 export type GetOrdersDateKeysApiResponse =
   /** status 200 Success */ DateTimeOffsetDateTimeOffsetPagedListRead;
 export type GetOrdersDateKeysApiArg = {
-  pageSize?: number;
+  pageSize: number;
   pageNumber?: string;
 };
 export type AskBidDto = {
-  amount?: number;
-  price?: number;
+  amount: number;
+  price: number;
 };
 export type OrderBookDto = {
-  retrievedAt?: string;
-  bids?: AskBidDto[] | null;
-  asks?: AskBidDto[] | null;
+  retrievedAt: string;
+  bids: AskBidDto[] | null;
+  asks: AskBidDto[] | null;
 };
 export type DateTimeOffsetDateTimeOffsetPagedList = {
-  items?: string[] | null;
-  pageNumber?: string;
-  pageSize?: number;
+  items: string[] | null;
+  pageNumber: string;
+  pageSize: number;
 };
 export type DateTimeOffsetDateTimeOffsetPagedListRead = {
-  items?: string[] | null;
-  pageNumber?: string;
-  pageSize?: number;
-  hasNextPage?: boolean;
+  items: string[] | null;
+  pageNumber: string;
+  pageSize: number;
+  hasNextPage: boolean;
 };
 export const { useGetOrdersQuery, useGetOrdersDateKeysQuery } = injectedRtkApi;

@@ -15,7 +15,7 @@ interface Props {
 }
 
 const BuyInput: React.FC<Props> = ({ data }) => {
-  const [amount, setAmount] = useState<number>();
+  const [amount, setAmount] = useState<number>(0);
   const [price, setPrice] = useState<number>();
 
   const handleAmountInput = useCallback(
@@ -63,8 +63,7 @@ const BuyInput: React.FC<Props> = ({ data }) => {
         <Input
           type="number"
           placeholder="BTC"
-          value={amount}
-          onChange={(e) => setAmount(parseInt(e.target.value))}
+          onChange={(e) => setAmount(parseInt(e.target.value || "0"))}
         />
       </InputGroup>
       <Stat className="p-4">
