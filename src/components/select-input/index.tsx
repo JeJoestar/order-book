@@ -1,4 +1,6 @@
-import { Select } from "@chakra-ui/react";
+// import { Select } from "@chakra-ui/react";
+import { Select, SelectItem } from "@nextui-org/react";
+import CustomMenuList from "../custom-menu-list";
 
 interface Option {
   value: string;
@@ -8,30 +10,43 @@ interface Option {
 interface Props {
   placeholder: string;
   options: Option[];
-  value?: string;
+  value?: Option;
+  onClick(): void;
   onChange(value: string): void;
 }
 
 const SelectInput: React.FC<Props> = ({
   options,
-  placeholder,
   value,
+  placeholder,
+  onClick,
   onChange,
 }) => {
+  // return (
+  //   <Select
+  //     onClick={onClick}
+  //     onChange={(e) => onChange(e.target.value)}
+  //     placeholder={placeholder}
+  //   >
+  //     <option disabled hidden>
+  //       {placeholder}
+  //     </option>
+  //     <CustomMenuList
+  //       maxHeight={300}
+  //       options={options}
+  //       value={value}
+  //       width={300}
+  //     />
+  //   </Select>
+  // );
   return (
-    <Select
-      onChange={(e) => onChange(e.target.value)}
-      placeholder={placeholder}
-    >
-      <option value="" selected={!value} disabled hidden>
-        {placeholder}
-      </option>
-      {options.map((item) => (
-        <option key={item.value} value={item.value}>
-          {item.label}
-        </option>
-      ))}
-    </Select>
+    <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
+      <Select label="Select an animal" className="max-w-xs">
+        {options.map((option) => (
+          <SelectItem key={option.value}>{option.label}</SelectItem>
+        ))}
+      </Select>
+    </div>
   );
 };
 

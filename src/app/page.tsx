@@ -2,6 +2,7 @@
 
 import { SignalRContext } from "@/boot/signalr";
 import BuyInput from "@/components/buy-input";
+import CustomMenuList from "@/components/custom-menu-list";
 import DepthChart from "@/components/depth-chart";
 import OrderBookTable from "@/components/order-book-table";
 import SelectInput from "@/components/select-input";
@@ -11,14 +12,15 @@ import {
   useGetOrdersQuery,
 } from "@/core/api/baseApi";
 import { dayjsExt } from "@/core/utils/dayjs";
+import useAppSelector from "@/hooks/use-app-selector";
 import { Button, CircularProgress } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const Home: React.FC = () => {
   const [dateKey, setDateKey] = useState<string>();
-  const [data, setData] = useState<OrderBookDto>();
-  const [keysData, setKeysData] = useState<string[]>([]);
-  const { data: orderBooksKeys } = useGetOrdersDateKeysQuery();
+  const { data } = useAppSelector((state) => state.orderBook);
+  const { currentData: orderBooksKeys, refetch: reloadKeys } =
+    useGetOrdersDateKeysQuery();
   const { currentData: dataByKey } = useGetOrdersQuery(
     {
       key: dateKey,
@@ -26,21 +28,6 @@ const Home: React.FC = () => {
     {
       skip: !dateKey,
     }
-  );
-
-  useEffect(() => {
-    if (!orderBooksKeys) return;
-
-    setKeysData(orderBooksKeys);
-  }, [orderBooksKeys]);
-
-  SignalRContext.useSignalREffect(
-    "SendTradeUpdate",
-    (orderBook: OrderBookDto) => {
-      setData(orderBook);
-      setKeysData([...keysData, orderBook.retrievedAt]);
-    },
-    []
   );
 
   const dataToRender = dateKey ? dataByKey : data;
@@ -58,14 +45,38 @@ const Home: React.FC = () => {
       <div>
         <BuyInput data={dataToRender} />
         <SelectInput
-          value={dateKey}
+          value={
+            dateKey
+              ? {
+                  label: dayjsExt(dateKey).format("YYYY.MM.DD HH:mm"),
+                  value: dateKey,
+                }
+              : undefined
+          }
           options={orderBooksKeys.map((key) => ({
             label: dayjsExt(key).format("YYYY.MM.DD HH:mm"),
             value: key,
           }))}
+          onClick={() => reloadKeys()}
           onChange={setDateKey}
           placeholder="Select snapshot"
         />
+        {/* <CustomMenuList
+          maxHeight={300}
+          options={orderBooksKeys.map((key) => ({
+            label: dayjsExt(key).format("YYYY.MM.DD HH:mm"),
+            value: key,
+          }))}
+          value={
+            dateKey
+              ? {
+                  label: dayjsExt(dateKey).format("YYYY.MM.DD HH:mm"),
+                  value: dateKey,
+                }
+              : undefined
+          }
+          width={300}
+        /> */}
       </div>
       <DepthChart data={dataToRender} />
       {dataByKey && (

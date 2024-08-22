@@ -9,8 +9,10 @@ import {
 import { createWrapper } from "next-redux-wrapper";
 import { toast } from "sonner";
 import { baseApi } from "../api/baseApi";
+import orderBookReducer from "./order-book";
 
 const combinedReducer = combineReducers({
+  orderBook: orderBookReducer,
   [baseApi.reducerPath]: baseApi.reducer,
 });
 

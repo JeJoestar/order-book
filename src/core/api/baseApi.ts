@@ -8,7 +8,13 @@ const injectedRtkApi = api.injectEndpoints({
       GetOrdersDateKeysApiResponse,
       GetOrdersDateKeysApiArg
     >({
-      query: () => ({ url: `/Orders/date-keys` }),
+      query: (queryArg) => ({
+        url: `/Orders/date-keys`,
+        params: {
+          pageSize: queryArg.pageSize,
+          pageNumber: queryArg.pageNumber,
+        },
+      }),
     }),
   }),
   overrideExisting: false,
@@ -18,15 +24,30 @@ export type GetOrdersApiResponse = /** status 200 Success */ OrderBookDto;
 export type GetOrdersApiArg = {
   key?: string;
 };
-export type GetOrdersDateKeysApiResponse = /** status 200 Success */ string[];
-export type GetOrdersDateKeysApiArg = void;
+export type GetOrdersDateKeysApiResponse =
+  /** status 200 Success */ DateTimeOffsetDateTimeOffsetPagedListRead;
+export type GetOrdersDateKeysApiArg = {
+  pageSize?: number;
+  pageNumber?: string;
+};
 export type AskBidDto = {
-  amount: number;
-  price: number;
+  amount?: number;
+  price?: number;
 };
 export type OrderBookDto = {
-  retrievedAt: string;
-  bids: AskBidDto[] | null;
-  asks: AskBidDto[] | null;
+  retrievedAt?: string;
+  bids?: AskBidDto[] | null;
+  asks?: AskBidDto[] | null;
+};
+export type DateTimeOffsetDateTimeOffsetPagedList = {
+  items?: string[] | null;
+  pageNumber?: string;
+  pageSize?: number;
+};
+export type DateTimeOffsetDateTimeOffsetPagedListRead = {
+  items?: string[] | null;
+  pageNumber?: string;
+  pageSize?: number;
+  hasNextPage?: boolean;
 };
 export const { useGetOrdersQuery, useGetOrdersDateKeysQuery } = injectedRtkApi;
